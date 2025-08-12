@@ -216,4 +216,4 @@ This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**
 
 **Made with ❤️ by the GalaxyNext Team**
 
-For more information, visit [galaxynext.com](https://galaxynext.com)
+For more information, visit [galaxynext.com](http://galaxynext.galaxyerpsoftware.com:8000/)
