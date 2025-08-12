@@ -1,0 +1,51 @@
+{
+    "frappe": {
+        "resolution": {
+            "commit_hash": null,
+            "branch": null
+        },
+        "required": [],
+        "idx": 1,
+        "version": "15.74.2"
+    },
+    "erpnext": {
+        "is_repo": true,
+        "resolution": {
+            "commit_hash": "32029f4dca49f130d3c0c47b957a87fd56478498",
+            "branch": "version-15"
+        },
+        "required": [],
+        "idx": 2,
+        "version": "15.71.0"
+    },
+    "india_compliance": {
+        "is_repo": true,
+        "resolution": {
+            "commit_hash": "9e0169e6ea14ada2f9778855364f50eae8e2679b",
+            "branch": "version-15"
+        },
+        "required": [],
+        "idx": 3,
+        "version": "15.20.0"
+    },
+    "galaxyerp": {
+        "is_repo": true,
+        "resolution": {
+            "commit_hash": "4371ecbfd8529389bd0965572bcdb0bafaa3181a",
+            "branch": "develop"
+        },
+        "required": [],
+        "idx": 4,
+        "version": "0.0.1"
+    },
+    "frappe_openai_integration": {
+        "is_repo": true,
+        "resolution": {
+            "commit_hash": "dfe25781e127ef5c8e1c951b092fbc8c7b721a19",
+            "branch": "master"
+        },
+        "required": [],
+        "idx": 5,
+        "version": "0.0.1"
+    }
+}

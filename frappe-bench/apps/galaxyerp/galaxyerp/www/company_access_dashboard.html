@@ -1,0 +1,563 @@
+{% extends "templates/web.html" %}
+
+{% block page_content %}
+<div class="company-access-dashboard">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Company Access Control Dashboard</h2>
+            <p class="text-muted">Manage user access to company-specific apps and features</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>User Access Summary</h4>
+                </div>
+                <div class="card-body">
+                    <div id="user_access_summary">
+                        <div class="text-center">
+                            <i class="fa fa-spinner fa-spin"></i> Loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Company App Status</h4>
+                </div>
+                <div class="card-body">
+                    <div id="company_app_status">
+                        <div class="text-center">
+                            <i class="fa fa-spinner fa-spin"></i> Loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Access Control Management</h4>
+                    <div class="card-header-actions">
+                        <button class="btn btn-primary btn-sm" onclick="galaxyerp.dashboard.create_new_access()">
+                            <i class="fa fa-plus"></i> New Access
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="galaxyerp.dashboard.bulk_assign()">
+                            <i class="fa fa-users"></i> Bulk Assign
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="access_control_list">
+                        <div class="text-center">
+                            <i class="fa fa-spinner fa-spin"></i> Loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Quick Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-primary btn-block" onclick="galaxyerp.dashboard.check_expiry()">
+                                <i class="fa fa-clock-o"></i> Check Expiry
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-success btn-block" onclick="galaxyerp.dashboard.auto_assign()">
+                                <i class="fa fa-magic"></i> Auto Assign
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-info btn-block" onclick="galaxyerp.dashboard.export_data()">
+                                <i class="fa fa-download"></i> Export Data
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-warning btn-block" onclick="galaxyerp.dashboard.refresh_data()">
+                                <i class="fa fa-refresh"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for New Access -->
+<div class="modal fade" id="newAccessModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Company Access</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="newAccessForm">
+                    <div class="form-group">
+                        <label>User</label>
+                        <select class="form-control" id="user_select" required>
+                            <option value="">Select User</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select class="form-control" id="company_select" required>
+                            <option value="">Select Company</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Company Apps</label>
+                        <div id="app_checkboxes">
+                            <!-- Apps will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Roles</label>
+                        <div id="role_checkboxes">
+                            <!-- Roles will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Valid Until</label>
+                        <input type="datetime-local" class="form-control" id="valid_until">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="galaxyerp.dashboard.save_access()">Save Access</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Bulk Assign -->
+<div class="modal fade" id="bulkAssignModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Bulk Assign Company Access</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="bulkAssignForm">
+                    <div class="form-group">
+                        <label>Users (one per line)</label>
+                        <textarea class="form-control" id="bulk_users" rows="5" placeholder="Enter usernames, one per line"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select class="form-control" id="bulk_company_select" required>
+                            <option value="">Select Company</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Company Apps</label>
+                        <div id="bulk_app_checkboxes">
+                            <!-- Apps will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Roles</label>
+                        <div id="bulk_role_checkboxes">
+                            <!-- Roles will be loaded here -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="galaxyerp.dashboard.save_bulk_assign()">Bulk Assign</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+frappe.provide('galaxyerp.dashboard');
+
+galaxyerp.dashboard = {
+    init: function() {
+        this.load_user_access_summary();
+        this.load_company_app_status();
+        this.load_access_control_list();
+        this.load_form_data();
+    },
+    
+    load_user_access_summary: function() {
+        frappe.call({
+            method: 'galaxyerp.doctype.company_access_control.company_access_control.get_user_access_summary',
+            callback: (r) => {
+                const summary = r.message;
+                const html = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <h3>${summary.apps_count}</h3>
+                                <p>Assigned Apps</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <h3>${summary.roles_count}</h3>
+                                <p>Assigned Roles</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <strong>Company:</strong> ${summary.company || 'None'}<br>
+                        <strong>Status:</strong> 
+                        <span class="badge badge-${summary.has_access ? 'success' : 'danger'}">
+                            ${summary.has_access ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+                `;
+                $('#user_access_summary').html(html);
+            }
+        });
+    },
+    
+    load_company_app_status: function() {
+        frappe.call({
+            method: 'galaxyerp.doctype.company_access_control.company_access_control.get_available_company_apps',
+            callback: (r) => {
+                const apps = r.message;
+                let html = '<div class="list-group">';
+                apps.forEach(app => {
+                    html += `
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            ${app.app_title}
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                $('#company_app_status').html(html);
+            }
+        });
+    },
+    
+    load_access_control_list: function() {
+        frappe.call({
+            method: 'frappe.client.get_list',
+            args: {
+                doctype: 'Company Access Control',
+                fields: ['user', 'company', 'access_status', 'valid_from', 'valid_until'],
+                limit: 20
+            },
+            callback: (r) => {
+                const records = r.message;
+                let html = '<div class="table-responsive"><table class="table table-striped">';
+                html += '<thead><tr><th>User</th><th>Company</th><th>Status</th><th>Valid From</th><th>Valid Until</th><th>Actions</th></tr></thead><tbody>';
+                
+                records.forEach(record => {
+                    html += `
+                        <tr>
+                            <td>${record.user}</td>
+                            <td>${record.company}</td>
+                            <td>
+                                <span class="badge badge-${record.access_status === 'Active' ? 'success' : 'danger'}">
+                                    ${record.access_status}
+                                </span>
+                            </td>
+                            <td>${record.valid_from || '-'}</td>
+                            <td>${record.valid_until || '-'}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" onclick="galaxyerp.dashboard.edit_access('${record.name}')">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="galaxyerp.dashboard.delete_access('${record.name}')">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += '</tbody></table></div>';
+                $('#access_control_list').html(html);
+            }
+        });
+    },
+    
+    load_form_data: function() {
+        // Load users
+        frappe.call({
+            method: 'frappe.client.get_list',
+            args: {
+                doctype: 'User',
+                fields: ['name', 'full_name'],
+                filters: {'enabled': 1}
+            },
+            callback: (r) => {
+                const users = r.message;
+                let html = '<option value="">Select User</option>';
+                users.forEach(user => {
+                    html += `<option value="${user.name}">${user.full_name || user.name}</option>`;
+                });
+                $('#user_select, #bulk_users').html(html);
+            }
+        });
+        
+        // Load companies
+        frappe.call({
+            method: 'galaxyerp.doctype.company_access_control.company_access_control.get_available_companies',
+            callback: (r) => {
+                const companies = r.message;
+                let html = '<option value="">Select Company</option>';
+                companies.forEach(company => {
+                    html += `<option value="${company.name}">${company.company_name}</option>`;
+                });
+                $('#company_select, #bulk_company_select').html(html);
+            }
+        });
+        
+        // Load apps
+        frappe.call({
+            method: 'galaxyerp.doctype.company_access_control.company_access_control.get_available_company_apps',
+            callback: (r) => {
+                const apps = r.message;
+                let html = '';
+                apps.forEach(app => {
+                    html += `
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="${app.name}" id="app_${app.name}">
+                            <label class="form-check-label" for="app_${app.name}">
+                                ${app.app_title}
+                            </label>
+                        </div>
+                    `;
+                });
+                $('#app_checkboxes, #bulk_app_checkboxes').html(html);
+            }
+        });
+    },
+    
+    create_new_access: function() {
+        $('#newAccessModal').modal('show');
+    },
+    
+    bulk_assign: function() {
+        $('#bulkAssignModal').modal('show');
+    },
+    
+    save_access: function() {
+        const user = $('#user_select').val();
+        const company = $('#company_select').val();
+        const apps = [];
+        const roles = ['Company User'];
+        
+        $('#app_checkboxes input:checked').each(function() {
+            apps.push($(this).val());
+        });
+        
+        if (!user || !company) {
+            frappe.msgprint('Please select user and company');
+            return;
+        }
+        
+        frappe.call({
+            method: 'galaxyerp.doctype.company_access_control.company_access_control.assign_company_to_user',
+            args: {
+                user: user,
+                company: company,
+                apps: apps,
+                roles: roles
+            },
+            callback: (r) => {
+                frappe.msgprint('Company access assigned successfully');
+                $('#newAccessModal').modal('hide');
+                this.load_access_control_list();
+            }
+        });
+    },
+    
+    save_bulk_assign: function() {
+        const users = $('#bulk_users').val().split('\n').filter(u => u.trim());
+        const company = $('#bulk_company_select').val();
+        const apps = [];
+        const roles = ['Company User'];
+        
+        $('#bulk_app_checkboxes input:checked').each(function() {
+            apps.push($(this).val());
+        });
+        
+        if (!users.length || !company) {
+            frappe.msgprint('Please enter users and select company');
+            return;
+        }
+        
+        frappe.call({
+            method: 'galaxyerp.doctype.company_access_control.company_access_control.bulk_assign_company_access',
+            args: {
+                users: users,
+                company: company,
+                apps: apps,
+                roles: roles
+            },
+            callback: (r) => {
+                frappe.msgprint(`Bulk assignment completed. ${r.message.length} users processed.`);
+                $('#bulkAssignModal').modal('hide');
+                this.load_access_control_list();
+            }
+        });
+    },
+    
+    check_expiry: function() {
+        frappe.call({
+            method: 'galaxyerp.doctype.company_access_control.company_access_control.check_access_expiry',
+            callback: (r) => {
+                frappe.msgprint(`Expiry check completed. ${r.message.length} records processed.`);
+            }
+        });
+    },
+    
+    auto_assign: function() {
+        frappe.call({
+            method: 'galaxyerp.utils.user_events.auto_assign_company_access',
+            callback: (r) => {
+                frappe.msgprint(r.message);
+                this.load_access_control_list();
+            }
+        });
+    },
+    
+    export_data: function() {
+        frappe.call({
+            method: 'frappe.client.get_list',
+            args: {
+                doctype: 'Company Access Control',
+                fields: ['user', 'company', 'access_status', 'valid_from', 'valid_until'],
+                limit: 1000
+            },
+            callback: (r) => {
+                const data = r.message;
+                const csv = this.convertToCSV(data);
+                this.downloadCSV(csv, 'company_access_control.csv');
+            }
+        });
+    },
+    
+    convertToCSV: function(data) {
+        if (!data.length) return '';
+        
+        const headers = Object.keys(data[0]);
+        const csv = [headers.join(',')];
+        
+        data.forEach(row => {
+            const values = headers.map(header => {
+                const value = row[header] || '';
+                return `"${value}"`;
+            });
+            csv.push(values.join(','));
+        });
+        
+        return csv.join('\n');
+    },
+    
+    downloadCSV: function(csv, filename) {
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    },
+    
+    refresh_data: function() {
+        this.load_user_access_summary();
+        this.load_company_app_status();
+        this.load_access_control_list();
+    },
+    
+    edit_access: function(name) {
+        frappe.set_route('Form', 'Company Access Control', name);
+    },
+    
+    delete_access: function(name) {
+        frappe.confirm('Are you sure you want to delete this access record?', () => {
+            frappe.call({
+                method: 'frappe.client.delete',
+                args: {
+                    doctype: 'Company Access Control',
+                    name: name
+                },
+                callback: (r) => {
+                    frappe.msgprint('Access record deleted successfully');
+                    this.load_access_control_list();
+                }
+            });
+        });
+    }
+};
+
+$(document).ready(function() {
+    galaxyerp.dashboard.init();
+});
+</script>
+{% endblock %}
+
+{% block style %}
+<style>
+.company-access-dashboard .card {
+    margin-bottom: 20px;
+}
+
+.company-access-dashboard .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.company-access-dashboard .card-header-actions {
+    float: right;
+}
+
+.company-access-dashboard .badge {
+    font-size: 0.8em;
+}
+
+.company-access-dashboard .table th {
+    background-color: #f8f9fa;
+    border-top: none;
+}
+
+.company-access-dashboard .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.company-access-dashboard .form-check {
+    margin-bottom: 0.5rem;
+}
+
+.company-access-dashboard .modal-lg {
+    max-width: 800px;
+}
+</style>
+{% endblock %}

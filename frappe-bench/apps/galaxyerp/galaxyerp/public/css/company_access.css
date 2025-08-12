@@ -1,0 +1,372 @@
+/* Company Access Control Styles */
+
+.company-access-indicator {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    background: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: fadeIn 0.3s ease-in;
+}
+
+.company-access-indicator i {
+    margin-right: 5px;
+}
+
+.company-specific-feature {
+    border-left: 3px solid #007bff;
+    padding-left: 10px;
+    margin: 5px 0;
+}
+
+.company-specific-feature.hidden {
+    display: none;
+}
+
+.workspace-company-specific {
+    position: relative;
+}
+
+.workspace-company-specific::before {
+    content: "🏢";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.company-access-dashboard .card {
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.company-access-dashboard .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.75rem 1.25rem;
+    border-radius: calc(0.375rem - 1px) calc(0.375rem - 1px) 0 0;
+}
+
+.company-access-dashboard .card-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.company-access-dashboard .card-header-actions {
+    float: right;
+}
+
+.company-access-dashboard .card-body {
+    padding: 1.25rem;
+}
+
+.company-access-dashboard .badge {
+    font-size: 0.8em;
+    padding: 0.25em 0.6em;
+}
+
+.company-access-dashboard .table {
+    margin-bottom: 0;
+}
+
+.company-access-dashboard .table th {
+    background-color: #f8f9fa;
+    border-top: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.company-access-dashboard .table td {
+    vertical-align: middle;
+    font-size: 0.875rem;
+}
+
+.company-access-dashboard .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.2rem;
+}
+
+.company-access-dashboard .form-check {
+    margin-bottom: 0.5rem;
+}
+
+.company-access-dashboard .form-check-input {
+    margin-right: 0.5rem;
+}
+
+.company-access-dashboard .modal-lg {
+    max-width: 800px;
+}
+
+.company-access-dashboard .list-group-item {
+    border: 1px solid #dee2e6;
+    padding: 0.75rem 1.25rem;
+}
+
+.company-access-dashboard .list-group-item:first-child {
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+}
+
+.company-access-dashboard .list-group-item:last-child {
+    border-bottom-left-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
+/* Company Access Form Styles */
+.company-access-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.company-access-form label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.company-access-form .form-control {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.company-access-form .form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Company Access Status Indicators */
+.access-status-active {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.access-status-inactive {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.access-status-expired {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.access-status-suspended {
+    color: #6c757d;
+    font-weight: 600;
+}
+
+/* Company Access Dashboard Stats */
+.stats-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.stats-card h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stats-card p {
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+}
+
+/* Company Access Quick Actions */
+.quick-actions .btn {
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.quick-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Company Access Table Actions */
+.table-actions .btn {
+    margin-right: 0.25rem;
+}
+
+.table-actions .btn:last-child {
+    margin-right: 0;
+}
+
+/* Company Access Modal Styles */
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+    font-weight: 600;
+    color: #495057;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Company Access Loading States */
+.loading-spinner {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+}
+
+.loading-spinner i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Company Access Responsive Design */
+@media (max-width: 768px) {
+    .company-access-dashboard .card-header-actions {
+        float: none;
+        margin-top: 1rem;
+    }
+    
+    .company-access-dashboard .table-responsive {
+        font-size: 0.8rem;
+    }
+    
+    .company-access-indicator {
+        position: static;
+        margin: 10px;
+        text-align: center;
+    }
+    
+    .stats-card h3 {
+        font-size: 2rem;
+    }
+}
+
+/* Company Access Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.company-access-dashboard .card {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Company Access Tooltips */
+.company-access-tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.company-access-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 1000;
+}
+
+.company-access-tooltip:hover::after {
+    opacity: 1;
+}
+
+/* Company Access Status Badges */
+.badge-access-active {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-access-inactive {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-access-expired {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-access-suspended {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Company Access Form Validation */
+.form-control.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #dc3545;
+}
+
+/* Company Access Success Messages */
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+}
+
+/* Company Access Error Messages */
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+} 

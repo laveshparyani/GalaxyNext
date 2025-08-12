@@ -1,0 +1,40 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "company_app",
+  "app_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "company_app",
+   "fieldtype": "Link",
+   "label": "Company App",
+   "options": "Company App",
+   "reqd": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "app_status",
+   "fieldtype": "Select",
+   "label": "App Status",
+   "options": "Active\nInactive\nSuspended"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "GalaxyERP",
+ "name": "Company App Assignment",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_views": 1
+}

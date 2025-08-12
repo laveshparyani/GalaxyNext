@@ -1,0 +1,5 @@
+frappe
+erpnext
+frappe_openai_integration
+galaxyerp
+india_compliance

@@ -1,0 +1,87 @@
+{% extends "frappe/templates/base.html" %}
+
+{% block title %}{{ _("Workspace") }}{% endblock %}
+
+{% block page_content %}
+<div class="page-container">
+	<div class="page-head">
+		<div class="container">
+			<div class="row flex align-center page-head-content justify-between">
+				<div class="col-md-4 col-sm-6 col-xs-7 page-title">
+					<button class="btn-reset sidebar-toggle-btn">
+						<svg class="es-icon icon-md sidebar-toggle-placeholder">
+							<use href="#es-line-align-justify"></use>
+						</svg>
+						<span class="sidebar-toggle-icon">
+							<svg class="es-icon icon-md">
+								<use href="#es-line-sidebar-collapse"></use>
+							</svg>
+						</span>
+					</button>
+					<div class="flex fill-width title-area">
+						<div>
+							<div class="flex">
+								<h3 class="ellipsis title-text">{{ workspace_title or _("Workspace") }}</h3>
+								<span class="indicator-pill whitespace-nowrap"></span>
+							</div>
+							<div class="ellipsis sub-heading hide text-muted"></div>
+						</div>
+						<button class="btn btn-default more-button hide">
+							<svg class="icon icon-sm">
+								<use href="#icon-dot-horizontal"></use>
+							</svg>
+						</button>
+					</div>
+				</div>
+				<div class="col-md-8 col-sm-6 col-xs-5 page-actions">
+					{% if show_sidebar %}
+					<button class="btn btn-default btn-sm sidebar-toggle-btn">
+						<svg class="icon icon-sm">
+							<use href="#icon-menu"></use>
+						</svg>
+					</button>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="layout-main-section-wrapper">
+		{% if show_sidebar %}
+		<div class="layout-side-section">
+			{% include "frappe/templates/includes/sidebar.html" %}
+		</div>
+		{% endif %}
+		
+		<div class="layout-main-section">
+			<div class="page-body">
+				{% block workspace_content %}{% endblock %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+	// Ensure proper workspace initialization
+	$(document).ready(function() {
+		// Initialize sidebar toggle functionality
+		$('.sidebar-toggle-btn').on('click', function() {
+			$('.layout-side-section').toggleClass('hidden');
+			$(document.body).trigger('toggleSidebar');
+		});
+		
+		// Ensure proper workspace title
+		var workspaceTitle = $('.title-text').text();
+		if (workspaceTitle === 'Workspace' || workspaceTitle === '{{ _("Workspace") }}') {
+			// Try to get the actual module title
+			var moduleTitle = $('.module-title').text() || 
+							 $('.page-title').text() || 
+							 $('h1').first().text() ||
+							 '{{ workspace_title or _("Workspace") }}';
+			$('.title-text').text(moduleTitle);
+		}
+	});
+</script>
+{% endblock %} 

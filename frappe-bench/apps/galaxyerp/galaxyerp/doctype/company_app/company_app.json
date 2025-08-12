@@ -1,0 +1,91 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "app_name",
+  "app_title",
+  "app_description",
+  "app_icon",
+  "app_status",
+  "column_break_5",
+  "app_configuration",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "app_name",
+   "fieldtype": "Data",
+   "label": "App Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "app_title",
+   "fieldtype": "Data",
+   "label": "App Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "app_description",
+   "fieldtype": "Text",
+   "label": "App Description"
+  },
+  {
+   "default": "fa fa-cube",
+   "fieldname": "app_icon",
+   "fieldtype": "Data",
+   "label": "App Icon"
+  },
+  {
+   "default": "Active",
+   "fieldname": "app_status",
+   "fieldtype": "Select",
+   "label": "App Status",
+   "options": "Active\nInactive\nDevelopment"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "app_configuration",
+   "fieldtype": "Code",
+   "label": "App Configuration",
+   "description": "JSON configuration for the app"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "GalaxyERP",
+ "name": "Company App",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_views": 1
+}
