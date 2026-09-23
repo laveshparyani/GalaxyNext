@@ -1,0 +1,360 @@
+Complete ERPNext Setup Guide for Windows WSL
+Table of Contents
+Prerequisites
+WSL Setup and Configuration
+System Dependencies Installation
+Database Setup (MariaDB)
+Additional Dependencies
+Frappe Bench Installation
+ERPNext Installation
+Site Configuration
+Troubleshooting
+Security Considerations
+
+Prerequisites
+System Requirements
+Operating System: Windows 10 version 2004 and higher (Build 19041 and higher) or Windows 11
+Memory: Minimum 4GB RAM (8GB recommended)
+Storage: At least 10GB free disk space
+Processor: 64-bit processor
+Network: Stable internet connection for downloading packages
+Required Access
+Administrator privileges on Windows
+Basic familiarity with command line interface
+Text editor (Notepad++ recommended for Windows)
+
+
+WSL Setup and Configuration
+Step 1: Check Current WSL Status
+Open PowerShell as Administrator
+Press Windows + X → Select "Windows PowerShell (Admin)"
+Or search "PowerShell" → Right-click → "Run as administrator"
+
+
+Check WSL Installation Status
+wsl -l -v
+
+
+Expected Output Scenarios:
+✅ If WSL is properly installed:
+ NAME      STATE           VERSION
+ Ubuntu    Running         2
+
+❌ If WSL is not installed: Error message or no output
+Step 2: Install WSL (If Not Already Installed)
+Install WSL with default Ubuntu:
+wsl --install
+
+
+Set WSL 2 as default version:
+wsl --set-default-version 2
+
+
+Install specific Ubuntu version (recommended):
+wsl --install -d Ubuntu-24.04
+
+
+Step 3: Install WSL2 Kernel Update
+Download the kernel update:
+Visit: https://aka.ms/wsl2kernel
+Download wsl_update_x64.msi
+Install the update:
+Run the downloaded .msi file
+Follow the installation wizard
+Step 4: Configure WSL2
+Convert Ubuntu to WSL 2 (if needed):
+wsl --set-version Ubuntu-24.04 2
+
+Verify WSL version:
+wsl -l -v
+ Expected output:
+ NAME           STATE           VERSION
+* Ubuntu-22.04  Stopped         2
+
+
+Launch Ubuntu:
+wsl
+
+
+Verify Ubuntu launch: You should see a prompt like:
+yourusername@yourpc:~$
+
+
+
+System Dependencies Installation
+Step 1: Update System Packages
+sudo apt update && sudo apt upgrade -y
+Step 2: Install Essential Development Tools
+Git Installation
+Git is essential for version control and downloading Frappe/ERPNext source code.
+sudo apt-get install git -y
+Verify installation:
+git --version
+Python Development Dependencies
+These packages are required for Python development and compilation of native extensions.
+sudo apt-get install python3-dev python3-setuptools python3-pip -y
+Python Virtual Environment Tools
+Virtual environments ensure isolated Python installations for different projects.
+sudo apt-get install virtualenv -y
+Step 3: Install Python venv Module
+Check Python version:
+python3 -V
+
+
+Install appropriate venv module:
+For Python 3.10.x:
+sudo apt install python3.10-venv -y
+
+
+For Python 3.12.x:
+sudo apt install python3.12-venv -y
+
+
+Step 4: Install Additional Python and System Tools
+sudo apt install -y python3-dev python3-pip python3-setuptools python3-wheel python3-venv
+sudo apt install -y git curl software-properties-common
+
+Database Setup (MariaDB)
+Option A: Using Ubuntu's Default MariaDB (Recommended)
+Step 1: Install MariaDB
+sudo apt update
+sudo apt install mariadb-server -y
+Step 2: Start and Enable MariaDB
+sudo systemctl enable mariadb
+sudo service mariadb start
+Step 3: Verify MariaDB Status
+sudo service mariadb status
+Step 4: Secure MariaDB Installation
+sudo mariadb-secure-installation
+Interactive Setup Responses:
+Enter current password for root (enter for none): → Press Enter
+Switch to unix_socket authentication [Y/n] → n
+Change the root password? [Y/n] → Y
+New password: → Enter a strong password
+Re-enter new password: → Confirm password
+Remove anonymous users? [Y/n] → Y
+Disallow root login remotely? [Y/n] → n
+Remove test database and access to it? [Y/n] → Y
+Reload privilege tables now? [Y/n] → Y
+Step 5: Test Database Connection
+sudo mariadb -u root -p
+Enter the password you set during secure installation.
+
+
+Step 6: Install MySQL Development Libraries
+sudo apt-get install libmysqlclient-dev -y
+Step 7: Configure MariaDB for UTF8MB4
+sudo nano /etc/mysql/my.cnf
+Add the following configuration:
+[mysqld]
+character-set-client-handshake = FALSE
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+[mysql]
+default-character-set = utf8mb4
+Restart MariaDB:
+sudo service mariadb restart
+
+
+Additional Dependencies
+Step 1: Install Redis Server
+Redis is used for caching and background job processing.
+sudo apt-get install redis-server -y
+Verify Redis installation:
+redis-cli ping
+Expected output: PONG
+Step 2: Install Node.js 24.x
+Node.js is required for building frontend assets.
+sudo apt-get install curl -y
+curl -sL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+sudo apt-get install -y nodejs
+Verify Node.js installation:
+node -v
+npm -v
+Step 3: Install Yarn Package Manager
+sudo npm install -g yarn
+Verify Yarn installation:
+yarn --version
+Step 4: Install wkhtmltopdf
+Required for PDF generation functionality.
+sudo apt-get install xvfb libfontconfig wkhtmltopdf -y
+
+Frappe Bench Installation
+Step 1: Install pipx and Python Virtual Environment Tools
+sudo apt update
+sudo apt install pipx python3-venv -y
+pipx ensurepath
+exec $SHELL
+Step 2: Install Frappe Bench
+pipx install frappe-bench
+Verify installation:
+bench --version
+Step 3: Initialize Frappe Bench
+bench init frappe-bench --frappe-branch version-15
+cd frappe-bench
+This creates a new directory frappe-bench with the Frappe framework.
+
+ERPNext Installation
+Step 1: Configure MariaDB User
+sudo service mariadb start
+sudo mysql -u root -p
+Execute the following SQL commands:
+USE mysql;
+ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('<your-mariadb-root-password>');
+FLUSH PRIVILEGES;
+EXIT;
+Restart MariaDB:
+sudo service mariadb restart
+
+Step 2: Create ERPNext Site
+bench new-site galaxynext.com
+You'll be prompted to:
+Enter MariaDB root password
+Set Administrator password for the site
+Step 3: Download ERPNext App
+bench get-app erpnext --branch version-15
+Step 4: Install ERPNext on Site
+bench --site galaxynext.com install-app erpnext
+Step 5: Enable Scheduler
+bench --site galaxynext.com enable-scheduler
+Step 6: Install Honcho (Process Manager)
+pipx install honcho
+If you encounter path issues:
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+Verify Honcho installation:
+which honcho && honcho --version
+
+
+Site Configuration
+Step 1: Configure Sites List
+echo "galaxynext.com" >> sites/sites.txt
+Step 2: Configure Windows Hosts File
+Open Notepad as Administrator
+Open the hosts file: C:\Windows\System32\Drivers\etc\hosts
+Add the following line:
+ 127.0.0.1    galaxynext.com
+Save and close
+Step 3: Start the Development Server
+bench start
+Step 4: Access ERPNext
+Open your web browser and navigate to:
+URL: http://galaxynext.com:8000
+Default credentials:
+Username: Administrator
+Password: The password you set during site creation
+
+#Troubleshooting
+Common Issues and Solutions
+1. MariaDB Connection Error
+Problem: pymysql.err.OperationalError: (2003, "Can't connect to MySQL server on '127.0.0.1'")
+Solution:
+Start MariaDB:
+sudo service mariadb start
+
+
+Check if MariaDB is listening on TCP:
+sudo netstat -tlpn | grep 3306
+If no output, edit configuration:
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+Ensure these settings:
+# skip-networking = 0    # commented out
+bind-address = 127.0.0.1
+Restart MariaDB:
+sudo service mariadb restart
+
+2. Cache and Build Issues
+Problem: Frontend assets not loading properly
+Solution:
+bash
+bench --site galaxynext.com clear-cache
+bench --site galaxynext.com clear-website-cache
+bench build
+bench start
+
+3. Permission Issues
+Problem: Permission denied errors
+Solution:
+sudo chown -R $USER:$USER ~/frappe-bench
+Performance Optimization
+1. Increase WSL Memory Allocation
+Create .wslconfig file in Windows user directory:
+[wsl2]
+memory=4GB
+processors=4
+2. Enable Production Mode
+bench --site galaxynext.com set-config developer_mode 0
+bench --site galaxynext.com clear-cache
+bench restart
+
+
+
+
+
+#Tackling the error
+gi13@gi13:/mnt/c/Users/gi13/Desktop/GalaxyNext$ bench init frappe-bench --frappe-branch version-15
+Setting Up Environment
+$ python3 -m venv env
+Error: Command '['/mnt/c/Users/gi13/Desktop/GalaxyNext/frappe-bench/env/bin/python3', '-m', 'ensurepip', '--upgrade', '--default-pip']' returned non-zero exit status 1.
+subprocess.CalledProcessError: Command 'python3 -m venv env' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gi13/.local/share/pipx/venvs/frappe-bench/lib/python3.12/site-packages/bench/commands/make.py", line 75, in init
+    init(
+  File "/home/gi13/.local/share/pipx/venvs/frappe-bench/lib/python3.12/site-packages/bench/utils/render.py", line 105, in wrapper_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/gi13/.local/share/pipx/venvs/frappe-bench/lib/python3.12/site-packages/bench/utils/system.py", line 66, in init
+    bench.setup.env(python=python)
+  File "/home/gi13/.local/share/pipx/venvs/frappe-bench/lib/python3.12/site-packages/bench/utils/render.py", line 126, in wrapper_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/gi13/.local/share/pipx/venvs/frappe-bench/lib/python3.12/site-packages/bench/bench.py", line 374, in env
+    self.run(f"{venv} env", cwd=self.bench.name)
+  File "/home/gi13/.local/share/pipx/venvs/frappe-bench/lib/python3.12/site-packages/bench/bench.py", line 49, in run
+    return exec_cmd(cmd, cwd=cwd or self.cwd, _raise=_raise, env=env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gi13/.local/share/pipx/venvs/frappe-bench/lib/python3.12/site-packages/bench/utils/__init__.py", line 184, in exec_cmd
+    raise CommandFailedError(cmd) from subprocess.CalledProcessError(return_code, cmd)
+bench.exceptions.CommandFailedError: python3 -m venv env
+
+ERROR: There was a problem while creating frappe-bench
+Do you want to rollback these changes? [y/N]: y
+INFO: Rolling back Bench "frappe-bench"
+
+
+PRESS “Y” TO ROLLBACK AND APPLY THIS SOLUTION:
+sudo apt update
+sudo apt install python3.12-venv
+
+sudo nano /etc/wsl.conf
+[automount]
+options = "metadata,umask=22,fmask=11"
+
+//Go to powershell and open as administrator
+wsl --shutdown
+
+sudo umount -l /mnt/c
+sudo mount -t drvfs C: /mnt/c -o metadata,umask=22,fmask=11
+sudo chown -R $(id -u):$(id -g) env
+
+sudo python3 -m venv env
+source env/bin/activate
+python3 -m pip install --upgrade pip wheel
+
+
+THEN CONTINUE WITH FURTHER STEPS
+bench init frappe-bench --frappe-branch version-15
+
+
+#Install India Compliance
+bench --site galaxynext.com set-maintenance-mode off && bench clear-cache && bench restart
+
+bench get-app --branch version-15 https://github.com/resilient-tech/india-compliance.git
+
+bench migrate
+
+bench --site galaxynext.com install-app india_compliance

@@ -57,17 +57,17 @@ GalaxyNext is a comprehensive Enterprise Resource Planning (ERP) system built on
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/GalaxyNext.git
+git clone https://github.com/laveshparyani/GalaxyNext.git
 cd GalaxyNext
 ```
 
-### 2. Set Up Frappe Bench
+### 2. Set Up the Bench
+The bench and its apps are already in this repository; only the virtualenv and local config are created on your machine.
 ```bash
-# Install Frappe Bench
-curl -sL https://git.io/frappe-bench | bash -s develop
-
-# Navigate to bench directory
+pip install frappe-bench
 cd frappe-bench
+bench setup env && bench setup requirements
+bench setup redis && bench setup procfile
 ```
 
 ### 3. Create New Site
@@ -84,23 +84,7 @@ bench --site galaxynext.com install-app india_compliance
 bench --site galaxynext.com install-app frappe_openai_integration
 ```
 
-### 5. Set Up Environment
-```bash
-# Activate virtual environment
-source env/bin/activate
-
-# Install Python dependencies
-pip install -r requirements.txt
-```
-
-### 6. Configure Environment Variables
-Create a `.env` file in the root directory:
-```env
-OPENAI_API_KEY=your_openai_api_key_here
-FRAPPE_SITE_URL=http://galaxynext.com
-```
-
-### 7. Start the Application
+### 5. Start the Application
 ```bash
 bench start
 ```
@@ -111,6 +95,22 @@ bench start
 - **Admin Panel**: http://galaxynext.com/app
 - **API Documentation**: http://galaxynext.com/api/method/frappe.utils.print_format.download_pdf
 
+## 🗂️ Repository Layout
+
+```
+frappe-bench/
+├── apps/galaxyerp/                 GalaxyNext custom app (Company Access Control, branding, permissions)
+├── apps/frappe/                    vendored Frappe Framework
+├── apps/erpnext/                   vendored ERPNext
+├── apps/india_compliance/          vendored India Compliance (GST)
+├── apps/frappe_openai_integration/ vendored OpenAI integration
+└── sites/                          apps.txt, common_site_config.json (no secrets)
+installation_steps                  step-by-step notes from the original setup
+```
+
+Per-site secrets are **not** in this repository: `sites/*/site_config.json`, private files and
+backups are git-ignored. `bench new-site` generates them on your machine.
+
 ## 📚 Documentation
 
 - [Frappe Framework Documentation](https://frappeframework.com/docs)
@@ -120,9 +120,8 @@ bench start
 ## 🔧 Configuration
 
 ### OpenAI Integration
-1. Obtain API key from [OpenAI](https://platform.openai.com/)
-2. Add to environment variables
-3. Configure in Frappe Desk > Setup > Integrations > OpenAI
+1. Obtain an API key from [OpenAI](https://platform.openai.com/)
+2. Enter it in Frappe Desk under the OpenAI integration settings. It is stored encrypted in the site database, never in this repository.
 
 ### India Compliance
 1. Configure GST settings in ERPNext
@@ -153,18 +152,9 @@ bench setup production
 bench start --production
 ```
 
-### Docker Deployment
-```bash
-# Build Docker image
-docker build -t galaxynext .
-
-# Run container
-docker run -p 8000:8000 galaxynext
-```
-
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+We welcome contributions! Please see the [Contributing Guidelines](.github/CONTRIBUTING.md) for details, including which folder is GalaxyNext's own code and which are vendored copies of Frappe and ERPNext.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -195,9 +185,8 @@ This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**
 
 ## 🆘 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/GalaxyNext/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/GalaxyNext/discussions)
-- **Documentation**: [Wiki](https://github.com/yourusername/GalaxyNext/wiki)
+- **Issues**: [GitHub Issues](https://github.com/laveshparyani/GalaxyNext/issues)
+- **Security**: see [SECURITY.md](.github/SECURITY.md)
 
 ## 🙏 Acknowledgments
 
@@ -210,10 +199,8 @@ This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**
 
 - **Version**: 1.0.0
 - **Status**: Active Development
-- **Last Updated**: January 2025
+- **Last Updated**: September 2026
 
 ---
 
 **Made with ❤️ by the GalaxyNext Team**
-
-For more information, visit [galaxynext.com](http://galaxynext.galaxyerpsoftware.com:8000/)
