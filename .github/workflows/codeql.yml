@@ -1,0 +1,53 @@
+# CodeQL, scoped to GalaxyNext's own code.
+#
+# This repository versions a whole bench, including vendored copies of Frappe, ERPNext,
+# India Compliance and the OpenAI integration. Those are upstream projects with their own
+# security processes, so only the galaxyerp app (and root-level scripts) is analysed here.
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frappe-bench/apps/galaxyerp/**"
+      - "*.py"
+      - ".github/workflows/codeql.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "frappe-bench/apps/galaxyerp/**"
+      - "*.py"
+      - ".github/workflows/codeql.yml"
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [python, javascript-typescript]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          config: |
+            paths:
+              - frappe-bench/apps/galaxyerp
+              - test_company_access.py
+            paths-ignore:
+              - frappe-bench/apps/galaxyerp/galaxyerp/public/dist
+              - "**/node_modules"
+
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
