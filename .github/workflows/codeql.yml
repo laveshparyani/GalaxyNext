@@ -10,13 +10,11 @@ on:
     branches: [main]
     paths:
       - "frappe-bench/apps/galaxyerp/**"
-      - "*.py"
       - ".github/workflows/codeql.yml"
   pull_request:
     branches: [main]
     paths:
       - "frappe-bench/apps/galaxyerp/**"
-      - "*.py"
       - ".github/workflows/codeql.yml"
   schedule:
     - cron: "17 3 * * 1"
@@ -43,7 +41,6 @@ jobs:
           config: |
             paths:
               - frappe-bench/apps/galaxyerp
-              - test_company_access.py
             paths-ignore:
               - frappe-bench/apps/galaxyerp/galaxyerp/public/dist
               - "**/node_modules"
